@@ -8,10 +8,14 @@ interface TaskListProps {
 }
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onDeleteTask, onToggleTask }) => {
+  const completedTaskStyle = {
+    textDecoration: 'line-through',
+  };
+
   return (
     <ul>
       {tasks.map((task) => (
-        <li key={task.id}>
+        <li key={task.id} style={task.done ? completedTaskStyle : {}}>
           <input
             type="checkbox"
             checked={task.done}
