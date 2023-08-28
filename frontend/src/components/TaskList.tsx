@@ -3,7 +3,7 @@ import Task from '../interfaces/Task';
 
 interface TaskListProps {
   tasks: Task[];
-  onDeleteTask: (taskId: number) => void;
+  onDeleteTask: (task: Task) => void;
   onToggleTask: (taskId: number) => void;
 }
 
@@ -18,7 +18,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDeleteTask, onToggleTask }
             onChange={() => onToggleTask(task.id)}
           />
           {task.content}
-          <button onClick={() => onDeleteTask(task.id)}>Usuń</button>
+          <button onClick={() => onDeleteTask(task)}>Usuń</button>
         </li>
       ))}
     </ul>
