@@ -1,29 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TaskList from './components/TaskList';
 import AddTask from './components/AddTask';
 import DeleteTask from './components/DeleteTask';
 import Task from './interfaces/Task';
+import {
+  getAllTasks,
+  createTask,
+  deleteTask,
+  updateTask,
+} from './services/TasksService';
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
+  useEffect(() => {
+    getAllTasks()
+      .then((data) => setTasks(data))
+      .catch((error) => console.error('Błąd podczas pobierania zadań:', error));
+  }, []);
+
   const handleAddTask = (content: string) => {
-    const newTask: Task = { id: Date.now(), content, done: false };
-    setTasks([...tasks, newTask]);
+    if (content.trim() !== '') {
+      createTask(content)
+        .then((data) => {
+          setTasks([...tasks, data]);
+        })
+        .catch((error) => console.error('Błąd podczas tworzenia zadania:', error));
+    }
   };
 
   const handleDeleteTask = (taskId: number) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks);
-    setTaskToDelete(null);
+    deleteTask(taskId)
+      .then(() => {
+        const updatedTasks = tasks.filter((task) => task.id !== taskId);
+        setTasks(updatedTasks);
+        setTaskToDelete(null);
+      })
+      .catch((error) => console.error('Błąd podczas usuwania zadania:', error));
   };
 
-  const handleToggleTask = (taskId: number) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, done: !task.done } : task
-    );
-    setTasks(updatedTasks);
+  const handleToggleTask = (taskId: number, done: boolean) => {
+    updateTask(taskId, done)
+      .then(() => {
+        const updatedTasks = tasks.map((task) =>
+          task.id === Number(taskId) ? { ...task, done } : task
+        );
+        setTasks(updatedTasks);
+      })
+      .catch((error) => console.error('Błąd podczas aktualizacji zadania:', error));
   };
 
   const handleOpenDeleteDialog = (task: Task) => {

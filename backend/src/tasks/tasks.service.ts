@@ -24,11 +24,11 @@ export class TasksService {
   }
 
   deleteTask(id: number): void {
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    this.tasks = this.tasks.filter((task) => task.id !== Number(id));
   }
 
   updateTask(id: number, done: boolean): Task {
-    const taskToUpdate = this.getTaskById(id);
+    const taskToUpdate = this.getTaskById(Number(id));
     if (taskToUpdate) {
       taskToUpdate.done = done;
     }

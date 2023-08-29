@@ -4,7 +4,7 @@ import Task from '../interfaces/Task';
 interface TaskListProps {
   tasks: Task[];
   onDeleteTask: (task: Task) => void;
-  onToggleTask: (taskId: number) => void;
+  onToggleTask: (taskId: number, done: boolean) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onDeleteTask, onToggleTask }) => {
@@ -19,7 +19,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDeleteTask, onToggleTask }
           <input
             type="checkbox"
             checked={task.done}
-            onChange={() => onToggleTask(task.id)}
+            onChange={() => onToggleTask(task.id, !task.done)}
           />
           {task.content}
           <button onClick={() => onDeleteTask(task)}>Usuń</button>
