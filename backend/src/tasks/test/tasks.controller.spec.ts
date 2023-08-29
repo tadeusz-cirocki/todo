@@ -49,7 +49,8 @@ describe('TasksController', () => {
 
   describe('deleteTask', () => {
     it('should delete a task by ID', () => {
-      jest.spyOn(tasksService, 'deleteTask').mockReturnValue();
+      const task = { id: 1, content: 'Task 1', done: false };
+      jest.spyOn(tasksService, 'deleteTask').mockReturnValue(task);
 
       expect(() => tasksController.deleteTask(1)).not.toThrowError();
     });

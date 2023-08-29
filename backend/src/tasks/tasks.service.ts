@@ -23,8 +23,14 @@ export class TasksService {
     return newTask;
   }
 
-  deleteTask(id: number): void {
-    this.tasks = this.tasks.filter((task) => task.id !== Number(id));
+  deleteTask(id: number): Task | null {
+    const taskIndex = this.tasks.findIndex((task) => task.id === Number(id));
+    if (taskIndex === -1) {
+      return null;
+    }
+
+    const deletedTask = this.tasks.splice(taskIndex, 1)[0];
+    return deletedTask;
   }
 
   updateTask(id: number, done: boolean): Task {

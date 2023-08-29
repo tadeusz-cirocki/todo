@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -16,26 +18,72 @@ export class TasksController {
 
   @Get()
   getAllTasks(): Task[] {
-    return this.tasksService.getAllTasks();
+    try {
+      return this.tasksService.getAllTasks();
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get(':id')
   getTaskById(@Param('id') id: number): Task {
-    return this.tasksService.getTaskById(id);
+    try {
+      const task = this.tasksService.getTaskById(id);
+      if (!task) {
+        throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      }
+      return task;
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Post()
   createTask(@Body('content') content: string): Task {
-    return this.tasksService.createTask(content);
+    try {
+      return this.tasksService.createTask(content);
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Delete(':id')
   deleteTask(@Param('id') id: number): void {
-    this.tasksService.deleteTask(id);
+    try {
+      const deleted = this.tasksService.deleteTask(id);
+      if (!deleted) {
+        throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Patch(':id')
   updateTask(@Param('id') id: number, @Body('done') done: boolean): Task {
-    return this.tasksService.updateTask(id, done);
+    try {
+      const updatedTask = this.tasksService.updateTask(id, done);
+      if (!updatedTask) {
+        throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      }
+      return updatedTask;
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
